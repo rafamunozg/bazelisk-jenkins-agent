@@ -57,3 +57,7 @@ ENV PATH=$PATH:/home/jenkins/go/bin
 VOLUME /home/${user}/.jenkins
 VOLUME ${AGENT_WORKDIR}
 WORKDIR /home/${user}
+
+# Taken from docker-jnlp-slave
+COPY jenkins-slave /usr/local/bin/jenkins-slave
+ENTRYPOINT ["jenkins-slave"]
