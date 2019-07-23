@@ -21,7 +21,7 @@
 #  THE SOFTWARE.
 
 FROM openjdk:8-jdk
-MAINTAINER Oleg Nenashev <o.v.nenashev@gmail.com>
+MAINTAINER Rafael Munoz G. <rafamunozg@gmail.com>
 
 ARG VERSION=3.29
 ARG user=jenkins
@@ -44,15 +44,16 @@ RUN curl --create-dirs -fsSLo /usr/share/jenkins/slave.jar https://repo.jenkins-
   && chmod 755 /usr/share/jenkins \
   && chmod 644 /usr/share/jenkins/slave.jar
 
-RUN curl -o go-installer.tar.gz https://dl.google.com/go/go1.12.6.linux-amd64.tar.gz && tar -C /usr/local -xzf go-installer.tar.gz
+RUN curl https://dl.google.com/go/go1.12.6.linux-amd64.tar.gz | tar -C /usr/local -xz && mkdir -p /usr/local/bazelisk
+ENV PATH=$PATH:/usr/local/go/bin:/usr/local/bazelisk/bin
+RUN GOPATH=/usr/local/bazelisk go get github.com/bazelbuild/bazelisk \ 
+  && chown -R root:staff /usr/local/go \
+  && chown -R root:staff /usr/local/bazelisk \
+  && rm -rf /home/${user}/.cache
 
 USER ${user}
-ENV AGENT_WORKDIR=${AGENT_WORKDIR}
-RUN mkdir /home/${user}/.jenkins && mkdir -p ${AGENT_WORKDIR}
-
-ENV PATH=$PATH:/usr/local/go/bin
-RUN go get github.com/bazelbuild/bazelisk
-ENV PATH=$PATH:/home/jenkins/go/bin
+ENV AGENT_WORKDIR=${AGENT_WORKDIR} 
+RUN mkdir /home/${user}/.jenkins && mkdir -p ${AGENT_WORKDIR} 
 
 VOLUME /home/${user}/.jenkins
 VOLUME ${AGENT_WORKDIR}
