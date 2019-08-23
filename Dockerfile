@@ -49,7 +49,8 @@ ENV PATH=$PATH:/usr/local/go/bin:/usr/local/bazelisk/bin
 RUN GOPATH=/usr/local/bazelisk go get github.com/bazelbuild/bazelisk \ 
   && chown -R root:staff /usr/local/go \
   && chown -R root:staff /usr/local/bazelisk \
-  && rm -rf /home/${user}/.cache
+  && rm -rf /home/${user}/.cache \
+  && curl https://sdk.cloud.google.com | bash 
 
 USER ${user}
 ENV AGENT_WORKDIR=${AGENT_WORKDIR} 
