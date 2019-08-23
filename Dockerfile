@@ -50,11 +50,15 @@ RUN GOPATH=/usr/local/bazelisk go get github.com/bazelbuild/bazelisk \
   && chown -R root:staff /usr/local/go \
   && chown -R root:staff /usr/local/bazelisk \
   && rm -rf /home/${user}/.cache \
-  && curl https://sdk.cloud.google.com | bash 
+  && echo '#!/bin/bash\nbazelisk' > /usr/bin/bazel \
+  && chmod +x /usr/bin/bazel
 
 USER ${user}
 ENV AGENT_WORKDIR=${AGENT_WORKDIR} 
-RUN mkdir /home/${user}/.jenkins && mkdir -p ${AGENT_WORKDIR} 
+RUN mkdir /home/${user}/.jenkins && mkdir -p ${AGENT_WORKDIR} \
+  && curl https://sdk.cloud.google.com | bash 
+ENV PATH=$PATH:/home/${user}/google-cloud-sdk/bin/
+RUN gcloud components install --quiet kubectl 
 
 VOLUME /home/${user}/.jenkins
 VOLUME ${AGENT_WORKDIR}
