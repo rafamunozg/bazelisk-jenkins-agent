@@ -14,3 +14,15 @@ And finally bazelisk
 
 ## Usage
 The image is meant to be used as it's origin. As a docker container, it'll run in a Kubernetes cluster or as individual image that will talk to the Jenkins master.
+
+### Quick reference to build it
+```bash
+export IMAGE_VERSION=<x.y.z>
+docker build -t rafamunozg/bazelisk-agent:$IMAGE_VERSION .
+docker run -it --rm rafamunozg/bazelisk-agent:$IMAGE_VERSION /bin/bash
+```
+
+*When ready:*
+```bash
+docker push rafamunozg/bazelisk-agent:$IMAGE_VERSION
+```
