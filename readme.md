@@ -12,6 +12,11 @@ But Bazelisk needed some additional components in it:
 
 And finally bazelisk
 
+###Starting on version 0.1.5
+Additional tools were added to make it easier to integrate with GCP services. The image now includes also:
+* gcloud and its common components (bq, gsutil, etc.)
+* kubectl
+
 ## Usage
 The image is meant to be used as it's origin. As a docker container, it'll run in a Kubernetes cluster or as individual image that will talk to the Jenkins master.
 
@@ -23,6 +28,7 @@ docker run -it --rm rafamunozg/bazelisk-agent:$IMAGE_VERSION /bin/bash
 ```
 
 *When ready:*
+
 ```bash
 docker push rafamunozg/bazelisk-agent:$IMAGE_VERSION
 ```

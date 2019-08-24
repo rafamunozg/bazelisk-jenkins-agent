@@ -55,6 +55,7 @@ RUN GOPATH=/usr/local/bazelisk go get github.com/bazelbuild/bazelisk \
 
 USER ${user}
 ENV AGENT_WORKDIR=${AGENT_WORKDIR} 
+ENV GCLOUD_PRESENT=true
 RUN mkdir /home/${user}/.jenkins && mkdir -p ${AGENT_WORKDIR} \
   && curl https://sdk.cloud.google.com | bash 
 ENV PATH=$PATH:/home/${user}/google-cloud-sdk/bin/
