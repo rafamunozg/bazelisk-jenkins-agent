@@ -44,6 +44,7 @@ RUN curl --create-dirs -fsSLo /usr/share/jenkins/slave.jar https://repo.jenkins-
   && chmod 755 /usr/share/jenkins \
   && chmod 644 /usr/share/jenkins/slave.jar
 
+# All tools need to be on common folders like /opt or /usr/local or they'll be lost in the agent running
 RUN curl https://dl.google.com/go/go1.12.6.linux-amd64.tar.gz | tar -C /usr/local -xz && mkdir -p /usr/local/bazelisk
 ENV PATH=$PATH:/usr/local/go/bin:/usr/local/bazelisk/bin
 RUN GOPATH=/usr/local/bazelisk go get github.com/bazelbuild/bazelisk \ 
@@ -52,14 +53,15 @@ RUN GOPATH=/usr/local/bazelisk go get github.com/bazelbuild/bazelisk \
   && rm -rf /home/${user}/.cache \
   && echo '#!/bin/bash\nbazelisk' > /usr/bin/bazel \
   && chmod +x /usr/bin/bazel
+RUN curl https://sdk.cloud.google.com > /tmp/gcp-install.sh \
+  && bash /tmp/gcp-install.sh --install-dir=/usr/local --disable-prompts \
+  && chown -R root:staff /usr/local/google-cloud-sdk \
+  && /usr/local/google-cloud-sdk/bin/gcloud components install --quiet kubectl
+ENV PATH=$PATH:/usr/local/google-cloud-sdk/bin
 
 USER ${user}
 ENV AGENT_WORKDIR=${AGENT_WORKDIR} 
-ENV GCLOUD_PRESENT=true
-RUN mkdir /home/${user}/.jenkins && mkdir -p ${AGENT_WORKDIR} \
-  && curl https://sdk.cloud.google.com | bash 
-ENV PATH=$PATH:/home/${user}/google-cloud-sdk/bin/
-RUN gcloud components install --quiet kubectl 
+RUN mkdir /home/${user}/.jenkins && mkdir -p ${AGENT_WORKDIR}
 
 VOLUME /home/${user}/.jenkins
 VOLUME ${AGENT_WORKDIR}
