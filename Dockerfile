@@ -56,7 +56,7 @@ RUN GOPATH=/usr/local/bazelisk go get github.com/bazelbuild/bazelisk \
 RUN curl https://sdk.cloud.google.com > /tmp/gcp-install.sh \
   && bash /tmp/gcp-install.sh --install-dir=/usr/local --disable-prompts \
   && chown -R root:staff /usr/local/google-cloud-sdk \
-  && /usr/local/google-cloud-sdk/bin/gcloud components install --quiet kubectl
+  && /usr/local/google-cloud-sdk/bin/gcloud components install --quiet kubectl beta alpha
 ENV PATH=$PATH:/usr/local/google-cloud-sdk/bin
 
 USER ${user}
