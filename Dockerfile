@@ -39,7 +39,7 @@ ARG AGENT_WORKDIR=/home/${user}/agent
 RUN echo 'deb http://deb.debian.org/debian stretch-backports main' > /etc/apt/sources.list.d/stretch-backports.list
 RUN apt-get update \
    && apt-get install -t stretch-backports git-lfs \
-   && apt-get install -y pkg-config zip g++ zlib1g-dev unzip python3
+   && apt-get install -y pkg-config zip g++ zlib1g-dev unzip python3 gettext-base
 RUN curl --create-dirs -fsSLo /usr/share/jenkins/slave.jar https://repo.jenkins-ci.org/public/org/jenkins-ci/main/remoting/${VERSION}/remoting-${VERSION}.jar \
   && chmod 755 /usr/share/jenkins \
   && chmod 644 /usr/share/jenkins/slave.jar
@@ -56,7 +56,8 @@ RUN GOPATH=/usr/local/bazelisk go get github.com/bazelbuild/bazelisk \
 RUN curl https://sdk.cloud.google.com > /tmp/gcp-install.sh \
   && bash /tmp/gcp-install.sh --install-dir=/usr/local --disable-prompts \
   && chown -R root:staff /usr/local/google-cloud-sdk \
-  && /usr/local/google-cloud-sdk/bin/gcloud components install --quiet kubectl beta alpha
+  && /usr/local/google-cloud-sdk/bin/gcloud components install --quiet kubectl beta alpha \
+  && chown -R jenkins:jenkins /home/jenkins/.config 
 ENV PATH=$PATH:/usr/local/google-cloud-sdk/bin
 
 USER ${user}
